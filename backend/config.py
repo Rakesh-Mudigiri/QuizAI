@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     # AI Providers (Groq Cloud Engine)
     groq_api_key: str = ""
     groq_api_key_backup: str = ""
-    groq_model: str = "llama-3.3-70b-versatile"
+    groq_model: str = "openai/gpt-oss-120b"
 
     # App
     app_name: str = "AI Quiz Generator"

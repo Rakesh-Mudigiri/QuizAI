@@ -316,9 +316,21 @@ def _generate_single_pass(
     prompt = _build_prompt(material, source_type, target_count, question_type, difficulty)
     result_quiz = None
 
-    keys = [k for k in [settings.groq_api_key, settings.groq_api_key_backup] if k]
-    models = ["llama-3.1-8b-instant", "llama-3.3-70b-versatile"]
+    # Build model candidate list starting with user-configured model, followed by known Groq models
+    candidate_models = [
+        settings.groq_model,
+        "openai/gpt-oss-120b",
+        "openai/gpt-oss-20b",
+        "llama-3.3-70b-versatile",
+        "llama-3.1-8b-instant",
+    ]
+    models = []
+    for m in candidate_models:
+        if m and m not in models:
+            models.append(m)
 
+    keys = [k for k in [settings.groq_api_key, settings.groq_api_key_backup] if k]
+    last_error = None
     for key in keys:
         for model in models:
             try:
@@ -330,11 +342,13 @@ def _generate_single_pass(
                 if result_quiz and len(result_quiz.questions) > 0:
                     return result_quiz
             except Exception as e:
+                last_error = e
                 logger.warning("Groq attempt with model %s failed: %s", model, e)
                 continue
 
     if result_quiz is None:
-        raise RuntimeError("Groq AI generation failed. Please check your GROQ_API_KEY in .env or try a shorter text.")
+        err_msg = f": {last_error}" if last_error else ""
+        raise RuntimeError(f"Groq AI generation failed. Please check your GROQ_API_KEY in .env or try a shorter text.{err_msg}")
 
     return result_quiz
 
