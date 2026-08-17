@@ -294,3 +294,29 @@
   border: none;
   cursor: pointer;
 }
+
+/* ── Mobile Responsive Rules ── */
+@media (max-width: 768px) {
+  .history-page {
+    padding: 16px 14px 90px;
+  }
+  .history-header-left h1 {
+    font-size: 1.4rem;
+  }
+  .history-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .search-input-wrap {
+    min-width: 100%;
+    max-width: 100%;
+  }
+  .history-grid {
+    grid-template-columns: 1fr;
+  }
+  .history-card-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

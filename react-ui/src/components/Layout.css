@@ -21,26 +21,38 @@
   z-index: 100;
   background: var(--bg-white);
   border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .top-bar-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 32px;
+  padding: 12px 20px;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .top-bar-inner {
+    padding: 14px 32px;
+  }
 }
 
 .brand {
   display: flex;
   align-items: center;
   gap: 8px;
+  user-select: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .brand-icon {
-  font-size: 24px;
+  font-size: 26px;
   color: var(--primary);
   font-variation-settings: 'FILL' 1;
 }
@@ -48,7 +60,7 @@
 .brand-text {
   font-family: 'Poppins', sans-serif;
   font-weight: 800;
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   color: var(--primary);
   letter-spacing: -0.02em;
 }
@@ -63,9 +75,11 @@
   color: var(--text-secondary);
   text-decoration: none;
   transition: color var(--transition);
+  padding: 6px 12px;
+  border-radius: 8px;
 }
-.desktop-nav-link:hover { color: var(--text-dark); }
-.desktop-nav-link.active { color: var(--primary); }
+.desktop-nav-link:hover { color: var(--text-dark); background: #F1F5F9; }
+.desktop-nav-link.active { color: var(--primary); background: var(--primary-bg); font-weight: 700; }
 
 .nav-cta-btn {
   display: flex;
@@ -99,8 +113,9 @@
 .page-content {
   flex: 1;
   overflow-y: auto;
-  padding-bottom: calc(var(--bottom-nav-height) + 16px);
+  padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 16px) + 16px);
   width: 100%;
+  box-sizing: border-box;
 }
 
 /* ── Desktop Footer ── */
@@ -114,31 +129,41 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  height: var(--bottom-nav-height);
-  background: var(--bg-white);
-  border-top: 1px solid var(--border-light);
+  height: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-around;
   z-index: 100;
-  padding: 0 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  box-sizing: border-box;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
 }
 
 .nav-tab {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 2px;
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-radius: var(--radius);
   transition: all var(--transition);
   text-decoration: none;
-  min-width: 60px;
+  min-width: 58px;
+  min-height: 48px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .nav-tab-icon-wrap {
-  width: 48px;
-  height: 32px;
+  width: 44px;
+  height: 28px;
   border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
@@ -153,7 +178,7 @@
 }
 
 .nav-tab-label {
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: var(--text-secondary);
   transition: color var(--transition);
@@ -181,7 +206,7 @@
   
   .desktop-nav {
     display: flex;
-    gap: 32px;
+    gap: 16px;
     align-items: center;
   }
   
@@ -196,11 +221,12 @@
     display: flex;
     justify-content: center;
     gap: 24px;
-    padding: 10px 24px;
-    font-size: 0.78rem;
+    padding: 16px 24px;
+    font-size: 0.8rem;
     color: var(--text-muted);
     background: transparent;
     margin-top: auto;
+    border-top: 1px solid var(--border-light);
   }
   .desktop-footer a {
     cursor: pointer;
@@ -212,7 +238,6 @@
 }
 
 /* ── Header Auth & Profile Section ── */
-/* User Nav Profile Pill */
 .user-nav-pill {
   display: flex;
   align-items: center;
@@ -225,9 +250,10 @@
   text-decoration: none;
   background: #F8FAFC;
   border: 1px solid #E2E8F0;
-  padding: 3px 10px 3px 4px;
+  padding: 4px 10px 4px 4px;
   border-radius: 100px;
   transition: all 0.2s ease;
+  min-height: 36px;
 }
 
 .nav-profile-link:hover {
@@ -242,32 +268,43 @@
   border-radius: 50%;
   border: 1.5px solid #6366F1;
   background: #FFFFFF;
+  object-fit: cover;
 }
 
 .nav-user-details-col {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  text-align: center;
+  text-align: left;
   line-height: 1.15;
 }
 
 .nav-user-name {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
   color: #0F172A;
-  text-align: center;
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .nav-user-badge-tag {
-  font-size: 0.67rem;
+  font-size: 0.65rem;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 2px;
-  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .nav-user-details-col {
+    display: none;
+  }
+  .nav-profile-link {
+    padding: 3px;
+  }
 }
 
 

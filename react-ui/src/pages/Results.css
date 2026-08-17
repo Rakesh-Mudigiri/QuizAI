@@ -231,32 +231,35 @@
   display: flex; 
   justify-content: center; 
   gap: 20px;
+  flex-wrap: wrap;
 }
 .res-btn-outline {
   padding: 14px 28px;
   background: #ffffff;
   border: 1px solid #C7D2FE;
   color: #4F46E5;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
+  justify-content: center;
 }
 .res-btn-solid {
   padding: 14px 28px;
   background: #2D1B69;
   color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   display: flex; 
   align-items: center; 
   gap: 8px;
+  justify-content: center;
 }
 
 .res-header-layout {
@@ -268,4 +271,41 @@
 
 .res-header-left {
   text-align: center;
+}
+
+/* ── Mobile Responsive Rules ── */
+@media (max-width: 768px) {
+  .res-body {
+    padding: 20px 16px 90px;
+  }
+  .res-top-card {
+    padding: 24px 16px;
+    border-radius: 16px;
+  }
+  .res-top-card h1 {
+    font-size: 1.5rem;
+  }
+  .res-stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .stat-num {
+    font-size: 1.1rem;
+  }
+  .stat-lbl {
+    font-size: 0.7rem;
+  }
+  .res-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .res-btn-outline, .res-btn-solid {
+    width: 100%;
+    padding: 14px 20px;
+  }
+  .rev-header {
+    flex-direction: column;
+    gap: 8px;
+  }
 }

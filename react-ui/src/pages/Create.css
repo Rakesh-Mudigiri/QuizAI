@@ -656,14 +656,64 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .create-container {
+    padding: 16px 14px 90px;
+  }
+  .create-page-header h1 {
+    font-size: 1.5rem;
+  }
+  .create-page-header p {
+    font-size: 0.9rem;
+  }
+  .create-card {
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+  .card-title {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+  }
   .source-options-row {
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
+  }
+  .source-option {
+    padding: 18px 14px;
+    width: 100%;
   }
   .chips-grid {
     grid-template-columns: 1fr;
+    gap: 10px;
   }
   .count-chips {
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    width: 100%;
+  }
+  .count-chip {
+    padding: 10px 4px;
+    font-size: 0.95rem;
+    justify-content: center;
+  }
+  .timer-chips-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .quiz-ready-card {
+    padding: 28px 20px;
+  }
+  .quiz-ready-title {
+    font-size: 1.45rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .timer-chips-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .count-chips {
+    grid-template-columns: repeat(5, 1fr);
   }
 }
