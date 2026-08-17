@@ -1,0 +1,587 @@
+/* Explore Page — Exact Reference Match */
+
+.landing-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #F8FAFC;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Centered Content Container ── */
+.landing-content-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Grid Background Overlay ── */
+.grid-bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: 
+    linear-gradient(to right, rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+  background-size: 36px 36px;
+  z-index: 0;
+  pointer-events: none;
+}
+.grid-bg::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0; height: 35%;
+  background: linear-gradient(to bottom, transparent, #F8FAFC);
+}
+
+/* ── Hero Section ── */
+.hero-section {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 48px 20px 32px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.hero-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(99,102,241,0.08);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: var(--radius-pill);
+  padding: 6px 16px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 20px;
+}
+
+.chip-icon {
+  font-size: 15px;
+  font-variation-settings: 'FILL' 1;
+}
+
+.hero-title {
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #0F172A;
+  margin-bottom: 18px;
+  letter-spacing: -0.025em;
+}
+
+.hero-highlight {
+  color: var(--primary);
+}
+
+.hero-desc {
+  font-size: 1.02rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 28px;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+/* Quick-Start Popular Topic Pills */
+.quick-topics-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.quick-topics-label {
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.quick-topics-pills {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.quick-topic-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  color: #334155;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 100px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+}
+
+.quick-topic-pill:hover {
+  background: #EFF6FF;
+  border-color: #3B82F6;
+  color: #1D4ED8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.15);
+}
+
+.hero-btn {
+  padding: 14px 32px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+}
+.hero-btn.primary-cta {
+  background: #2D1B69;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(45, 27, 105, 0.25);
+}
+.hero-btn.primary-cta:hover {
+  background: #1e114a;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(45, 27, 105, 0.35);
+}
+
+.hero-btn.secondary-cta {
+  background: #ffffff;
+  color: #0F172A;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+.hero-btn.secondary-cta:hover {
+  background: #EEF2FF;
+  color: var(--primary);
+  border-color: var(--primary-light);
+}
+
+/* ── Features & Effective Recall Section ── */
+.features-section {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 24px 0 64px;
+  margin: 0 auto;
+}
+
+.section-header-center {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #EEF2FF;
+  color: #4F46E5;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 6px 14px;
+  border-radius: 100px;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.section-subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 580px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* 4-Step Recall Grid — 2x2 Layout (1 & 2 top, 3 & 4 bottom) */
+.recall-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .recall-steps-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.recall-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -2px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+}
+
+.recall-card:hover {
+  transform: translateY(-2px);
+  border-color: #CBD5E1;
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.08);
+}
+
+.recall-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.recall-step-num {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #94A3B8;
+  letter-spacing: 0.05em;
+}
+
+.recall-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recall-icon-wrap .material-symbols-outlined {
+  font-size: 24px;
+}
+
+.recall-card-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 8px;
+  line-height: 1.35;
+}
+
+.recall-card-desc {
+  font-size: 0.92rem;
+  color: #475569;
+  line-height: 1.55;
+  margin-bottom: 20px;
+  flex: 1;
+}
+
+.recall-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.recall-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #F1F5F9;
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
+}
+
+.recall-pill .material-symbols-outlined {
+  font-size: 15px;
+}
+
+.recall-pill.green-pill {
+  background: #ECFDF5;
+  color: #065F46;
+  border-color: #A7F3D0;
+}
+
+.recall-pill.blank-pill {
+  background: #FFFFFF;
+  color: #475569;
+  border-color: #CBD5E1;
+}
+
+.recall-pill.yellow-pill {
+  background: #FFFBEB;
+  color: #92400E;
+  border-color: #FDE68A;
+}
+
+.recall-quote-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: #92400E;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: auto;
+}
+
+
+/* ── Recent Quizzes (at Bottom) ── */
+.recent-quizzes-section {
+  width: 100%;
+  padding: 0 0 60px;
+  margin: 0 auto;
+}
+.section-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+}
+.see-all-btn {
+  display: flex; align-items: center; gap: 4px;
+  background: none; border: none; font-size: 0.88rem; font-weight: 700;
+  color: var(--primary); cursor: pointer;
+}
+.recent-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.recent-quiz-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.recent-quiz-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary-light);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+.recent-card-top {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
+}
+.source-badge {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 0.72rem; font-weight: 700; color: var(--primary);
+  background: #EEF2FF; padding: 4px 8px; border-radius: 4px;
+}
+.diff-tag {
+  font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+}
+.diff-easy { background: #ECFDF5; color: #10B981; }
+.diff-medium { background: #FFFBEB; color: #F59E0B; }
+.diff-hard { background: #FEF2F2; color: #EF4444; }
+
+.recent-quiz-title {
+  font-size: 1.05rem; font-weight: 700; color: #0F172A; margin-bottom: 16px;
+  line-height: 1.4;
+}
+.recent-card-footer {
+  display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted);
+}
+.card-hover-action {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-light);
+  font-size: 0.85rem; font-weight: 700; color: var(--primary);
+}
+
+/* ── Explore Theme Switcher Button ── */
+.explore-theme-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 16px;
+  margin-bottom: -16px;
+  position: relative;
+  z-index: 10;
+}
+
+.explore-theme-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid #E2E8F0;
+  border-radius: 100px;
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+}
+
+.explore-theme-btn:hover {
+  background: #FFFFFF;
+  border-color: #6366F1;
+  color: #4F46E5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+}
+
+.explore-theme-btn .theme-icon {
+  font-size: 17px;
+  color: #6366F1;
+}
+
+/* ── 🌙 Full Dark Theme Styling for Explore Page (Global Theme) ── */
+.dark-theme .landing-page,
+[data-theme="dark"] .landing-page {
+  background-color: #0B0F19;
+  color: #F1F5F9;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark-theme .landing-page .grid-bg,
+[data-theme="dark"] .landing-page .grid-bg {
+  background-image: 
+    linear-gradient(to right, rgba(99, 102, 241, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(99, 102, 241, 0.08) 1px, transparent 1px);
+}
+
+.dark-theme .landing-page .grid-bg::after,
+[data-theme="dark"] .landing-page .grid-bg::after {
+  background: linear-gradient(to bottom, transparent, #0B0F19);
+}
+
+.landing-page.dark-theme .hero-chip {
+  background: rgba(99, 102, 241, 0.16);
+  border-color: rgba(99, 102, 241, 0.35);
+  color: #818CF8;
+}
+
+.landing-page.dark-theme .hero-title {
+  color: #F8FAFC;
+}
+
+.landing-page.dark-theme .hero-highlight {
+  color: #818CF8;
+  text-shadow: 0 0 24px rgba(129, 140, 248, 0.3);
+}
+
+.landing-page.dark-theme .hero-desc {
+  color: #94A3B8;
+}
+
+.landing-page.dark-theme .quick-topics-label {
+  color: #64748B;
+}
+
+.landing-page.dark-theme .quick-topic-pill {
+  background: #1E293B;
+  border-color: #334155;
+  color: #E2E8F0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.landing-page.dark-theme .quick-topic-pill:hover {
+  background: #2D3748;
+  border-color: #6366F1;
+  color: #A5B4FC;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.landing-page.dark-theme .section-title {
+  color: #F8FAFC;
+}
+
+.landing-page.dark-theme .section-subtitle {
+  color: #94A3B8;
+}
+
+.landing-page.dark-theme .section-badge {
+  background: rgba(99, 102, 241, 0.16);
+  border-color: rgba(99, 102, 241, 0.3);
+  color: #818CF8;
+}
+
+.landing-page.dark-theme .recall-card {
+  background: #131B2E;
+  border-color: #1E293B;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.landing-page.dark-theme .recall-card:hover {
+  border-color: #3B82F6;
+  box-shadow: 0 8px 30px rgba(59, 130, 246, 0.18);
+}
+
+.landing-page.dark-theme .recall-step-num {
+  color: #475569;
+}
+
+.landing-page.dark-theme .recall-card-title {
+  color: #F1F5F9;
+}
+
+.landing-page.dark-theme .recall-card-desc {
+  color: #94A3B8;
+}
+
+.landing-page.dark-theme .recall-pill {
+  background: #1E293B;
+  border-color: #334155;
+  color: #CBD5E1;
+}
+
+.landing-page.dark-theme .recall-quote-box {
+  background: rgba(217, 119, 6, 0.12);
+  border-color: rgba(217, 119, 6, 0.25);
+  color: #FBBF24;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .bento-grid, .recent-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .format-card, .difficulty-card, .explanation-card {
+    grid-column: span 1;
+  }
+  .format-card { flex-direction: column; }
+  .expl-header { flex-direction: column; gap: 16px; }
+}
+
+
+
+
