@@ -37,7 +37,6 @@ Thumbs.db
 # Node / Frontend
 node_modules/
 react-ui/node_modules/
-react-ui/dist/
 
 # Logs
 *.log
