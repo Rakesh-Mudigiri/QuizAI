@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { apiGet, apiPost } from '../api';
 import { useAuth } from '../context/AuthContext';
@@ -18,43 +18,147 @@ export default function Quiz() {
   
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [autoSubmittedNotice, setAutoSubmittedNotice] = useState(false);
   const [error, setError] = useState('');
 
   // Timer
   const [timeLeft, setTimeLeft] = useState(null);
 
+  // REFS TO PREVENT STALE CLOSURES IN TIMER & ASYNC CALLBACKS
+  const answersRef = useRef({});
+  const questionsRef = useRef([]);
+  const submittingRef = useRef(false);
+  const submittedRef = useRef(false);
+
+  // Helper to update answers state, answersRef, and draft in sessionStorage
+  const updateAnswers = (updater) => {
+    setAnswers(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      answersRef.current = next;
+      try {
+        sessionStorage.setItem(`quiz_${id}_draft_answers`, JSON.stringify(next));
+      } catch (e) {
+        console.error('Failed saving draft answers', e);
+      }
+      return next;
+    });
+  };
+
   useEffect(() => {
     setLoading(true);
     setQuiz(null);
     setQuestions([]);
+    questionsRef.current = [];
     setAnswers({});
+    answersRef.current = {};
     setReviewMarks({});
     setIdx(0);
     setError('');
     setTimeLeft(null);
     setSubmitting(false);
+    setAutoSubmittedNotice(false);
+    submittingRef.current = false;
+    submittedRef.current = false;
+
+    // Restore draft answers if available in sessionStorage
+    try {
+      const draft = sessionStorage.getItem(`quiz_${id}_draft_answers`);
+      if (draft) {
+        const parsedDraft = JSON.parse(draft);
+        setAnswers(parsedDraft);
+        answersRef.current = parsedDraft;
+      }
+    } catch (e) {}
 
     apiGet(`/api/quiz/${id}`).then(data => {
       setQuiz(data);
       const sortedQ = (data.questions || []).sort((a, b) => a.order_index - b.order_index);
       setQuestions(sortedQ);
+      questionsRef.current = sortedQ;
+
       const t = parseInt(params.get('time'), 10);
       if (t > 0) setTimeLeft(t * 60);
     }).catch(e => setError(e.message)).finally(() => setLoading(false));
   }, [id, params]);
 
+  const handleSubmitDirect = async (isAuto = false) => {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
+    setSubmitting(true);
+    setShowSubmitModal(false);
+
+    try {
+      const targetQuestions = questionsRef.current.length > 0 ? questionsRef.current : questions;
+      
+      // Retrieve latest answers from answersRef or fallback to draft in sessionStorage
+      let currentAnswers = { ...answersRef.current };
+      if (Object.keys(currentAnswers).length === 0) {
+        try {
+          const draft = sessionStorage.getItem(`quiz_${id}_draft_answers`);
+          if (draft) {
+            currentAnswers = JSON.parse(draft);
+          }
+        } catch (e) {}
+      }
+
+      const payload = {
+        answers: targetQuestions.map(item => {
+          const ans = currentAnswers[item.id];
+          const hasVal = ans !== undefined && ans !== null && String(ans).trim() !== '';
+          return {
+            question_id: item.id,
+            selected_answer: hasVal ? String(ans).trim() : null,
+          };
+        }),
+        user_name: user?.name || 'Student',
+        user_email: user?.email || null,
+        user_id: (user?.id && !isNaN(Number(user.id))) ? Number(user.id) : null,
+      };
+
+      const result = await apiPost(`/api/quiz/${id}/submit`, payload);
+      
+      sessionStorage.setItem(`quiz_${id}_answers`, JSON.stringify(currentAnswers));
+      sessionStorage.setItem(`quiz_${id}_result`, JSON.stringify(result));
+      sessionStorage.removeItem(`quiz_${id}_draft_answers`);
+
+      nav(`/results/${id}`);
+    } catch (e) {
+      setError(e.message);
+      setSubmitting(false);
+      submittingRef.current = false;
+      submittedRef.current = false;
+      setAutoSubmittedNotice(false);
+    }
+  };
+
   useEffect(() => {
-    if (timeLeft === null || timeLeft <= 0) return;
+    if (timeLeft === null) return;
+
+    if (timeLeft <= 0) {
+      if (!submittedRef.current && !submittingRef.current) {
+        submittedRef.current = true;
+        setAutoSubmittedNotice(true);
+        handleSubmitDirect(true);
+      }
+      return;
+    }
+
     const interval = setInterval(() => {
       setTimeLeft(prev => {
-        if (prev <= 1) { 
-          clearInterval(interval); 
-          handleSubmit(true); 
-          return 0; 
+        if (prev === null) return null;
+        if (prev <= 1) {
+          clearInterval(interval);
+          if (!submittedRef.current && !submittingRef.current) {
+            submittedRef.current = true;
+            setAutoSubmittedNotice(true);
+            handleSubmitDirect(true);
+          }
+          return 0;
         }
         return prev - 1;
       });
     }, 1000);
+
     return () => clearInterval(interval);
   }, [timeLeft !== null]);
 
@@ -69,12 +173,12 @@ export default function Quiz() {
 
   const selectOption = (letter) => {
     if (!q) return;
-    setAnswers(prev => ({ ...prev, [q.id]: letter }));
+    updateAnswers(prev => ({ ...prev, [q.id]: letter }));
   };
 
   const clearCurrentResponse = () => {
     if (!q) return;
-    setAnswers(prev => {
+    updateAnswers(prev => {
       const next = { ...prev };
       delete next[q.id];
       return next;
@@ -83,7 +187,7 @@ export default function Quiz() {
 
   const saveShort = (val) => {
     if (!q) return;
-    if (val.trim()) setAnswers(prev => ({ ...prev, [q.id]: val }));
+    if (val.trim()) updateAnswers(prev => ({ ...prev, [q.id]: val }));
     else clearCurrentResponse();
   };
 
@@ -103,29 +207,9 @@ export default function Quiz() {
     setShowSubmitModal(false);
   };
 
-  const handleSubmitDirect = async () => {
-    setShowSubmitModal(false);
-    setSubmitting(true);
-    try {
-      const payload = {
-        answers: questions.map(item => ({ question_id: item.id, selected_answer: answers[item.id] || null })),
-        user_name: user?.name || 'Student',
-        user_email: user?.email || null,
-        user_id: (user?.id && !isNaN(Number(user.id))) ? Number(user.id) : null,
-      };
-      const result = await apiPost(`/api/quiz/${id}/submit`, payload);
-      sessionStorage.setItem(`quiz_${id}_answers`, JSON.stringify(answers));
-      sessionStorage.setItem(`quiz_${id}_result`, JSON.stringify(result));
-      nav(`/results/${id}`);
-    } catch (e) {
-      setError(e.message);
-      setSubmitting(false);
-    }
-  };
-
   const handleSubmit = (auto = false) => {
     if (auto) {
-      handleSubmitDirect();
+      handleSubmitDirect(true);
     } else {
       handleOpenSubmitModal();
     }
@@ -527,6 +611,29 @@ export default function Quiz() {
               </button>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* ── AUTO-SUBMITTED OVERLAY WHEN TIMER EXPIRES ── */}
+      {autoSubmittedNotice && (
+        <div className="quiz-modal-backdrop" style={{ zIndex: 9999 }}>
+          <div className="quiz-submit-modal" style={{ textAlign: 'center', padding: '36px 28px' }}>
+            <div className="modal-alert-icon-wrap warning-mode" style={{ margin: '0 auto 16px auto' }}>
+              <span className="material-symbols-outlined modal-main-icon spin-icon">timer</span>
+            </div>
+            <h2 className="submit-modal-title" style={{ fontSize: '1.4rem', fontWeight: 800 }}>
+              Time's Up!
+            </h2>
+            <p className="submit-modal-subtitle" style={{ marginTop: '8px', fontSize: '0.95rem', color: '#475569' }}>
+              The quiz timer has completed. Automatically submitting and scoring your answers...
+            </p>
+            <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
+              <span className="material-symbols-outlined spin-icon" style={{ fontSize: 24, color: 'var(--primary)' }}>
+                progress_activity
+              </span>
+              <span style={{ fontWeight: 600, color: '#1E293B' }}>Evaluating results...</span>
+            </div>
           </div>
         </div>
       )}
