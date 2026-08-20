@@ -29,19 +29,28 @@ export default function Quiz() {
   const questionsRef = useRef([]);
   const submittingRef = useRef(false);
   const submittedRef = useRef(false);
+  const handleSubmitDirectRef = useRef(null);
 
-  // Helper to update answers state, answersRef, and draft in sessionStorage
+  // Sync state to refs on every render
+  useEffect(() => {
+    answersRef.current = answers;
+  }, [answers]);
+
+  useEffect(() => {
+    questionsRef.current = questions;
+  }, [questions]);
+
+  // Synchronous update helper for answers state, answersRef, and sessionStorage draft
   const updateAnswers = (updater) => {
-    setAnswers(prev => {
-      const next = typeof updater === 'function' ? updater(prev) : updater;
-      answersRef.current = next;
-      try {
-        sessionStorage.setItem(`quiz_${id}_draft_answers`, JSON.stringify(next));
-      } catch (e) {
-        console.error('Failed saving draft answers', e);
-      }
-      return next;
-    });
+    const current = answersRef.current;
+    const next = typeof updater === 'function' ? updater(current) : updater;
+    answersRef.current = next;
+    try {
+      sessionStorage.setItem(`quiz_${id}_draft_answers`, JSON.stringify(next));
+    } catch (e) {
+      console.error('Failed saving draft answers', e);
+    }
+    setAnswers(next);
   };
 
   useEffect(() => {
@@ -60,7 +69,13 @@ export default function Quiz() {
     submittingRef.current = false;
     submittedRef.current = false;
 
-    // Restore draft answers if available in sessionStorage
+    // Clear old result & answer storage from previous runs of this quiz
+    try {
+      sessionStorage.removeItem(`quiz_${id}_result`);
+      sessionStorage.removeItem(`quiz_${id}_answers`);
+    } catch (e) {}
+
+    // Restore draft answers if available in sessionStorage for active run
     try {
       const draft = sessionStorage.getItem(`quiz_${id}_draft_answers`);
       if (draft) {
@@ -103,10 +118,11 @@ export default function Quiz() {
 
       const payload = {
         answers: targetQuestions.map(item => {
-          const ans = currentAnswers[item.id];
+          const qid = item.id;
+          const ans = currentAnswers[qid] !== undefined ? currentAnswers[qid] : currentAnswers[String(qid)];
           const hasVal = ans !== undefined && ans !== null && String(ans).trim() !== '';
           return {
-            question_id: item.id,
+            question_id: Number(qid),
             selected_answer: hasVal ? String(ans).trim() : null,
           };
         }),
@@ -131,6 +147,11 @@ export default function Quiz() {
     }
   };
 
+  // Always keep ref pointing to latest handleSubmitDirect implementation
+  useEffect(() => {
+    handleSubmitDirectRef.current = handleSubmitDirect;
+  });
+
   useEffect(() => {
     if (timeLeft === null) return;
 
@@ -138,7 +159,9 @@ export default function Quiz() {
       if (!submittedRef.current && !submittingRef.current) {
         submittedRef.current = true;
         setAutoSubmittedNotice(true);
-        handleSubmitDirect(true);
+        if (handleSubmitDirectRef.current) {
+          handleSubmitDirectRef.current(true);
+        }
       }
       return;
     }
@@ -151,7 +174,9 @@ export default function Quiz() {
           if (!submittedRef.current && !submittingRef.current) {
             submittedRef.current = true;
             setAutoSubmittedNotice(true);
-            handleSubmitDirect(true);
+            if (handleSubmitDirectRef.current) {
+              handleSubmitDirectRef.current(true);
+            }
           }
           return 0;
         }
